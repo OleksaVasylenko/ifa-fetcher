@@ -13,7 +13,7 @@ instance/
 .webassets-cache
 
 # pyenv
- .python-version
+.python-version
 
 # mypy
 .mypy_cache/
