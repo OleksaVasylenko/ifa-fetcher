@@ -1,3 +1,6 @@
+import urllib.parse
+from typing import Any
+
 import requests
 
 url = "https://limitvalue.ifa.dguv.de/WebForm_gw2.aspx"
@@ -19,17 +22,26 @@ headers = {
     "Sec-Fetch-User": "?1",
 }
 
-form_data = "__EVENTTARGET=&__EVENTARGUMENT=&Tbox_sub=aqua&Tbox_cas=&Butsearch=Search"
-data = {
+raw_data = {
     "__EVENTTARGET": "",
     "__EVENTARGUMENT": "",
-    "Tbox_sub": "aqua",
+    "Tbox_sub": "",
     "Tbox_cas": "",
     "Butsearch": "Search",
 }
 
 
+def build_form_data_for_search(term: str) -> dict[str, Any]:
+    if not term:
+        raise ValueError("search term can not be empty")
+
+    result = raw_data.copy()
+    result["Tbox_sub"] = urllib.parse.quote_plus(term)
+    return result
+
+
 def main() -> None:
+    data = build_form_data_for_search("aqua")
     r = requests.post(url, headers=headers, data=data)
     print(r.status_code)
     print(r.text)
