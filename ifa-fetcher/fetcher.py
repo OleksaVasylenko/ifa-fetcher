@@ -1,3 +1,4 @@
+import sys
 import urllib.parse
 from typing import Any
 
@@ -40,12 +41,15 @@ def build_form_data_for_search(term: str) -> dict[str, Any]:
     return result
 
 
-def main() -> None:
-    data = build_form_data_for_search("aqua")
+def main(arg: Any) -> None:
+    data = build_form_data_for_search(arg)
     r = requests.post(url, headers=headers, data=data)
     print(r.status_code)
     print(r.text)
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) != 2:
+        raise SystemExit("One arg should be passed")
+
+    main(sys.argv[1])
