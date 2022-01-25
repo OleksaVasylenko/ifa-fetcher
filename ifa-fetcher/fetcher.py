@@ -3,6 +3,7 @@ import urllib.parse
 from typing import Any
 
 import requests
+from bs4 import BeautifulSoup
 
 url = "https://limitvalue.ifa.dguv.de/WebForm_gw2.aspx"
 method = "POST"
@@ -44,8 +45,10 @@ def build_form_data_for_search(term: str) -> dict[str, Any]:
 def main(arg: Any) -> None:
     data = build_form_data_for_search(arg)
     r = requests.post(url, headers=headers, data=data)
+    soup = BeautifulSoup(r.text, "html.parser")
+    findings = [i.string for i in soup.find_all("a", class_="internal block")]
+    print(findings)
     print(r.status_code)
-    print(r.text)
 
 
 if __name__ == "__main__":
