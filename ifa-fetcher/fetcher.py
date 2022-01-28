@@ -42,11 +42,19 @@ def build_form_data_for_search(term: str) -> dict[str, Any]:
     return result
 
 
+def request_ifa_db(form_data: dict[str, Any]) -> requests.Response:
+    return requests.post(url, headers=headers, data=form_data)
+
+
+def extract_search_findings(page_text: str) -> list[str]:
+    soup = BeautifulSoup(page_text, "html.parser")
+    return [i.string for i in soup.find_all("a", class_="internal block")]
+
+
 def main(arg: Any) -> None:
     data = build_form_data_for_search(arg)
-    r = requests.post(url, headers=headers, data=data)
-    soup = BeautifulSoup(r.text, "html.parser")
-    findings = [i.string for i in soup.find_all("a", class_="internal block")]
+    r = request_ifa_db(data)
+    findings = extract_search_findings(r.text)
     print(findings)
     print(r.status_code)
 
