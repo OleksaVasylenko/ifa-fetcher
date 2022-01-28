@@ -46,17 +46,20 @@ def request_ifa_db(form_data: dict[str, Any]) -> requests.Response:
     return requests.post(url, headers=headers, data=form_data)
 
 
-def extract_search_findings(page_text: str) -> list[str]:
+def extract_search_findings(page_text: str) -> set[str]:
     soup = BeautifulSoup(page_text, "html.parser")
-    return [i.string for i in soup.find_all("a", class_="internal block")]
+    return {i.string.lower() for i in soup.find_all("a", class_="internal block")}
+
+
+def search(term: str) -> set[str]:
+    data = build_form_data_for_search(term)
+    response = request_ifa_db(data)
+    findings = extract_search_findings(response.text)
+    return findings
 
 
 def main(arg: Any) -> None:
-    data = build_form_data_for_search(arg)
-    r = request_ifa_db(data)
-    findings = extract_search_findings(r.text)
-    print(findings)
-    print(r.status_code)
+    print(search(arg))
 
 
 if __name__ == "__main__":
