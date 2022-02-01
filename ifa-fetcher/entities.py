@@ -1,20 +1,12 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
-
-
-@dataclass(frozen=True)
-class SearchReport:
-    units: list[SearchReportUnit]
-
-    def as_primitive(self) -> list[dict[str, Any]]:
-        return [u.as_dict() for u in self.units]
 
 
 @dataclass(frozen=True)
 class SearchReportUnit:
     SKU: str
-    exact_match: list[str]
-    partial_match: dict[str, list[str]]
+    exact_match: list[str] = field(default_factory=list)
+    partial_match: dict[str, list[str]] = field(default_factory=dict)
 
     def as_dict(self) -> dict[str, Any]:
         return {
@@ -22,3 +14,11 @@ class SearchReportUnit:
             "exact": self.exact_match,
             "partial": self.partial_match,
         }
+
+
+@dataclass(frozen=True)
+class SearchReport:
+    units: list[SearchReportUnit] = field(default_factory=list)
+
+    def as_primitive(self) -> list[dict[str, Any]]:
+        return [u.as_dict() for u in self.units]
