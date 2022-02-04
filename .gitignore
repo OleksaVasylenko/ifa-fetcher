@@ -19,3 +19,6 @@ instance/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# packaging tools
+*.egg-info/
