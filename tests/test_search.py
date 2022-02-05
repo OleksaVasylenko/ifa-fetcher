@@ -8,8 +8,13 @@ from src.ifa_fetcher.main import search_ingredient
     [
         ("hello", ["hello"], ("hello", [])),
         ("hello world", ["hello"], ("", ["hello"])),
+        ("Hello world", ["hello"], ("", ["hello"])),
+        ("hello world", ["Hello"], ("", ["Hello"])),
         ("hello world", ["hello", "world"], ("", ["hello", "world"])),
+        ("hello world", ["hello", "World"], ("", ["hello", "World"])),
         ("hello", ["hello world"], ("", ["hello world"])),
+        ("Hello", ["hello"], ("hello", [])),
+        ("hello", ["Hello"], ("Hello", [])),
     ],
 )
 def test_search_ingredient(
