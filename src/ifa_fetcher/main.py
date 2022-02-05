@@ -1,8 +1,3 @@
-import pprint
-import sys
-
-pprint.pprint(sys.path)
-
 from . import entities, fetcher
 from .csv_input import read_csv
 
@@ -11,14 +6,14 @@ def search_ingredient(
     ingredient: str, ingredient_sample: list[str]
 ) -> tuple[str, list[str]]:
     if ingredient in ingredient_sample:
-        print("Found exact match:", ingredient)
         return ingredient, []
 
-    print("Trying to find partial match...")
     match = []
     for item in ingredient_sample:
-        if ingredient in item:
-            match.append(item)
+        for part in ingredient.split():
+            if part in item:
+                match.append(item)
+                continue
     return "", match
 
 
