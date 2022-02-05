@@ -3,16 +3,16 @@ import pytest
 from src.ifa_fetcher.main import search_ingredient
 
 
-def test_search_ingredient_exact() -> None:
-    result = search_ingredient("hello", ["hello"])
-    assert result == ("hello", [])
-
-
-def test_search_ingredient_partial_left() -> None:
-    result = search_ingredient("hello world", ["hello"])
-    assert result == ("", ["hello"])
-
-
-def test_search_ingredient_partial_right() -> None:
-    result = search_ingredient("hello", ["hello world"])
-    assert result == ("", ["hello world"])
+@pytest.mark.parametrize(
+    "ingredient, ingredients, expected_result",
+    [
+        ("hello", ["hello"], ("hello", [])),
+        ("hello world", ["hello"], ("", ["hello"])),
+        ("hello", ["hello world"], ("", ["hello world"])),
+    ],
+)
+def test_search_ingredient(
+    ingredient: str, ingredients: list[str], expected_result: tuple[str, list[str]]
+) -> None:
+    result = search_ingredient(ingredient, ingredients)
+    assert result == expected_result
