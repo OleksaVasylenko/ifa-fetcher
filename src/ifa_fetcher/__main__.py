@@ -1,3 +1,4 @@
+import time
 from contextlib import suppress
 
 from . import entities, fetcher
@@ -15,8 +16,9 @@ def search_ingredient(
         return ingredient_sample[idx], []
 
     match = []
+    folded_terms = folded_ingredient.split()
     for idx, item in enumerate(folded_ingredient_sample):
-        for part in folded_ingredient.split():
+        for part in folded_terms:
             if part in item:
                 match.append(ingredient_sample[idx])
                 continue
@@ -24,7 +26,7 @@ def search_ingredient(
 
 
 def main() -> None:
-    items_to_find = read_csv("../files/example_input.csv")
+    items_to_find = read_csv("../../files/example_input.csv")
     report = entities.SearchReport()
     for sku, ingredients in items_to_find.items():
         print("checking", sku)
