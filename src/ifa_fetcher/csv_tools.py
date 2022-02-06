@@ -11,7 +11,6 @@ def read_csv(file_path: str) -> dict[str, list[str]]:
         for row in reader:
             ingredients = [i.strip() for i in row["Ingredients"].split(",")]
             result[row["SKU"]] = ingredients
-
     return result
 
 
