@@ -46,9 +46,9 @@ def request_ifa_db(form_data: dict[str, Any]) -> requests.Response:
     return requests.post(url, headers=headers, data=form_data)
 
 
-def extract_search_findings(page_text: str) -> set[str]:
+def extract_search_findings(page_text: str) -> list[str]:
     soup = BeautifulSoup(page_text, "html.parser")
-    return {i.string.lower() for i in soup.find_all("a", class_="internal block")}
+    return [i.string for i in soup.find_all("a", class_="internal block")]
 
 
 def search(term: str) -> set[str]:
