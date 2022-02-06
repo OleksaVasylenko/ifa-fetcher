@@ -2,6 +2,7 @@ from contextlib import suppress
 
 from . import entities, fetcher
 from .csv_input import read_csv
+from .csv_output import write_csv
 from .search import search_ingredient
 
 
@@ -20,6 +21,7 @@ def main() -> None:
 
         report.units.append(report_unit)
     print(report.as_primitive())
+    write_csv(report)
 
 
 if __name__ == "__main__":
