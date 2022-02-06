@@ -1,5 +1,4 @@
 import csv
-import sys
 from collections import OrderedDict
 
 from .entities import SearchReport
@@ -28,10 +27,3 @@ def write_csv(report: SearchReport, file_path: str) -> None:
         writer.writeheader()
         for item in primitive_report:
             writer.writerow(item)
-
-
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        raise systemexit("one arg should be passed")
-
-    read_csv(sys.argv[1])
