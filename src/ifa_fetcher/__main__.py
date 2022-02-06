@@ -14,7 +14,6 @@ def main() -> None:
     items_to_find = read_csv(in_file_path)
     report = entities.SearchReport()
     for sku, ingredients in items_to_find.items():
-        print("checking", sku)
         report_unit = entities.SearchReportUnit(SKU=sku)
         for ingr in ingredients:
             findings = fetcher.search(ingr)
@@ -24,7 +23,6 @@ def main() -> None:
                 report_unit.partial_match[ingr] = partial_match
 
         report.units.append(report_unit)
-    print(report.as_primitive())
     write_csv(report, out_file_path)
 
 

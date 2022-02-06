@@ -59,7 +59,7 @@ def search(term: str) -> set[str]:
 
 
 def main(arg: Any) -> None:
-    print(search(arg))
+    search(arg)
 
 
 if __name__ == "__main__":

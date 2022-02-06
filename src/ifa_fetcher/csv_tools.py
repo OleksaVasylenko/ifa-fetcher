@@ -9,7 +9,6 @@ def read_csv(file_path: str) -> dict[str, list[str]]:
     with open(file_path, newline="") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            print(row["SKU"], row["Ingredients"])
             ingredients = [i.strip() for i in row["Ingredients"].split(",")]
             result[row["SKU"]] = ingredients
 
