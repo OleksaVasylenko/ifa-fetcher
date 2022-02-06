@@ -1,13 +1,17 @@
+import sys
 from contextlib import suppress
 
 from . import entities, fetcher
-from .csv_input import read_csv
-from .csv_output import write_csv
+from .csv_tools import read_csv, write_csv
 from .search import search_ingredient
 
 
 def main() -> None:
-    items_to_find = read_csv("../../files/example_input.csv")
+    if len(sys.argv) != 3:
+        raise SystemExit("Please provide input and output file paths")
+    in_file_path = sys.argv[1]
+    out_file_path = sys.argv[2]
+    items_to_find = read_csv(in_file_path)
     report = entities.SearchReport()
     for sku, ingredients in items_to_find.items():
         print("checking", sku)
@@ -21,7 +25,7 @@ def main() -> None:
 
         report.units.append(report_unit)
     print(report.as_primitive())
-    write_csv(report)
+    write_csv(report, out_file_path)
 
 
 if __name__ == "__main__":
