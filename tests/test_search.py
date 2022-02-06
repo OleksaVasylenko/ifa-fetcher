@@ -1,6 +1,6 @@
 import pytest
 
-from ifa_fetcher.__main__ import search_ingredient
+from ifa_fetcher.search import search_ingredient
 
 
 @pytest.mark.parametrize(
