@@ -10,7 +10,7 @@ def read_csv(file_path: str) -> dict[str, list[str]]:
         reader = csv.DictReader(csvfile)
         for row in reader:
             print(row["SKU"], row["Ingredients"])
-            ingredients = [i.strip().lower() for i in row["Ingredients"].split(",")]
+            ingredients = [i.strip() for i in row["Ingredients"].split(",")]
             result[row["SKU"]] = ingredients
 
     return result
