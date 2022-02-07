@@ -1,6 +1,6 @@
 import pytest
 
-from ifa_fetcher.fetcher import build_form_data_for_search
+from ifa_fetcher.fetcher import build_form_data_for_search, extract_search_findings
 
 
 def test_build_form_data_for_search() -> None:
@@ -17,3 +17,11 @@ def test_build_form_data_for_search() -> None:
 def test_build_form_data_for_search() -> None:
     with pytest.raises(ValueError):
         build_form_data_for_search("")
+
+
+def test_extract_search_findings(ifa_aqua_response_html: str) -> None:
+    assert extract_search_findings(ifa_aqua_response_html) == [
+        "Paraquat",
+        "Paraquat dichloride (ISO)",
+        "Paraquat dimethylsulfate",
+    ]
