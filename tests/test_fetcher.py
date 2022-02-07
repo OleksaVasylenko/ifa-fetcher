@@ -25,3 +25,11 @@ def test_extract_search_findings(ifa_aqua_response_html: str) -> None:
         "Paraquat dichloride (ISO)",
         "Paraquat dimethylsulfate",
     ]
+
+
+def test_extract_search_findings_absent(ifa_empty_response_html: str) -> None:
+    assert extract_search_findings(ifa_empty_response_html) == []
+
+
+def test_extract_search_findings_empty_page() -> None:
+    assert extract_search_findings("") == []

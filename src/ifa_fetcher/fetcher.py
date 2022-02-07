@@ -56,14 +56,3 @@ def search(term: str) -> set[str]:
     response = request_ifa_db(data)
     findings = extract_search_findings(response.text)
     return findings
-
-
-def main(arg: Any) -> None:
-    search(arg)
-
-
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        raise SystemExit("One arg should be passed")
-
-    main(sys.argv[1])
