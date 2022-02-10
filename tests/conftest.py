@@ -39,7 +39,7 @@ class IFAServer:
         self._thread = threading.Thread(target=self._server.serve_forever)
 
         self.incoming_requests = []
-        self.url = f"{self.SCHEME}{self.HOST}:{port}"
+        self.url = f"{self.SCHEME}{self.HOST}:{port}/"
 
     def start(self) -> None:
         self._thread.start()

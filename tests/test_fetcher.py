@@ -1,9 +1,12 @@
+from unittest.mock import ANY
+
 import pytest
 
 from ifa_fetcher.fetcher import (
     IFAClient,
     build_form_data_for_search,
     extract_search_findings,
+    headers,
 )
 
 from .conftest import IFAServer
@@ -49,3 +52,5 @@ def test_ifa_client(ifa_server: IFAServer):
     assert len(ifa_server.incoming_requests) == 1
     request, *_ = ifa_server.incoming_requests
     assert request.method == "POST"
+    assert request.url == ifa_server.url
+    assert dict(request.headers) == {**headers, "Content-Length": ANY, "Host": ANY}

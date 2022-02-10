@@ -13,7 +13,7 @@ headers = {
     "Accept-Encoding": "gzip, deflate, br",
     "Content-Type": "application/x-www-form-urlencoded",
     "Origin": "https://limitvalue.ifa.dguv.de",
-    "DNT": "1",
+    "Dnt": "1",
     "Connection": "keep-alive",
     "Referer": "https://limitvalue.ifa.dguv.de/WebForm_gw2.aspx",
     "Upgrade-Insecure-Requests": "1",
