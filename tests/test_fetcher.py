@@ -1,6 +1,10 @@
 import pytest
 
-from ifa_fetcher.fetcher import build_form_data_for_search, extract_search_findings
+from ifa_fetcher.fetcher import (
+    IFAClient,
+    build_form_data_for_search,
+    extract_search_findings,
+)
 
 
 def test_build_form_data_for_search() -> None:
@@ -35,8 +39,8 @@ def test_extract_search_findings_empty_page() -> None:
     assert extract_search_findings("") == []
 
 
-def test_ifa_server(ifa_server):
-    import requests
-
-    requests.get(ifa_server.url)
+def test_ifa_client(ifa_server):
+    client = IFAClient(ifa_server.url)
+    client.search_ingredient("something")
     assert len(ifa_server.incoming_requests) == 1
+    breakpoint()

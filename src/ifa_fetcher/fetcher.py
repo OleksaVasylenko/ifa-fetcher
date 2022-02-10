@@ -6,7 +6,6 @@ import requests
 from bs4 import BeautifulSoup
 
 url = "https://limitvalue.ifa.dguv.de/WebForm_gw2.aspx"
-method = "POST"
 headers = {
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
@@ -42,17 +41,21 @@ def build_form_data_for_search(term: str) -> dict[str, Any]:
     return result
 
 
-def request_ifa_db(form_data: dict[str, Any]) -> requests.Response:
-    return requests.post(url, headers=headers, data=form_data)
-
-
 def extract_search_findings(page_text: str) -> list[str]:
     soup = BeautifulSoup(page_text, "html.parser")
     return [i.string for i in soup.find_all("a", class_="internal block")]
 
 
+class IFAClient:
+    def __init__(self, url: str):
+        self._url = url
+
+    def search_ingredient(self, name: str) -> list[str]:
+        data = build_form_data_for_search(name)
+        response = requests.post(self._url, headers=headers, data=data)
+        return extract_search_findings(response.text)
+
+
 def search(term: str) -> set[str]:
-    data = build_form_data_for_search(term)
-    response = request_ifa_db(data)
-    findings = extract_search_findings(response.text)
-    return findings
+    client = IFAClient(url)
+    return client.search_ingredient(term)
