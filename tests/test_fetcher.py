@@ -33,3 +33,10 @@ def test_extract_search_findings_absent(ifa_empty_response_html: str) -> None:
 
 def test_extract_search_findings_empty_page() -> None:
     assert extract_search_findings("") == []
+
+
+def test_ifa_server(ifa_server):
+    import requests
+
+    requests.get(ifa_server.url)
+    assert len(ifa_server.incoming_requests) == 1
