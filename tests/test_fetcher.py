@@ -6,6 +6,8 @@ from ifa_fetcher.fetcher import (
     extract_search_findings,
 )
 
+from .conftest import IFAServer
+
 
 def test_build_form_data_for_search() -> None:
     term = "hello"
@@ -39,8 +41,11 @@ def test_extract_search_findings_empty_page() -> None:
     assert extract_search_findings("") == []
 
 
-def test_ifa_client(ifa_server):
+def test_ifa_client(ifa_server: IFAServer):
+    # can not check form data of the request :(
+    # https://github.com/pallets/flask/issues/3448
     client = IFAClient(ifa_server.url)
     client.search_ingredient("something")
     assert len(ifa_server.incoming_requests) == 1
-    breakpoint()
+    request, *_ = ifa_server.incoming_requests
+    assert request.method == "POST"
