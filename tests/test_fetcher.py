@@ -3,8 +3,11 @@ from unittest.mock import ANY
 import pytest
 
 from ifa_fetcher.fetcher import (
+    IFA_URL,
     IFAClient,
+    IFAClientConfig,
     build_form_data_for_search,
+    create_ifa_client,
     extract_search_findings,
     headers,
 )
@@ -54,3 +57,15 @@ def test_ifa_client(ifa_server: IFAServer) -> None:
     assert request.method == "POST"
     assert request.url == ifa_server.url
     assert dict(request.headers) == {**headers, "Content-Length": ANY, "Host": ANY}
+
+
+@pytest.mark.parametrize(
+    "url, env", [(IFA_URL, None), ("http://a.com", {"IFA_URL": "http://a.com"})]
+)
+def test_ifa_client_config(url: str, env: dict[str, str] | None) -> None:
+    result = IFAClientConfig.from_env(env)
+    assert result == IFAClientConfig(url=url)
+
+
+def test_create_ifa_client() -> None:
+    assert type(create_ifa_client()) == IFAClient
