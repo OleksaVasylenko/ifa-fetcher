@@ -1,11 +1,13 @@
+import os
 import sys
 import urllib.parse
+from dataclasses import dataclass
 from typing import Any
 
 import requests
 from bs4 import BeautifulSoup
 
-url = "https://limitvalue.ifa.dguv.de/WebForm_gw2.aspx"
+IFA_URL = "https://limitvalue.ifa.dguv.de/WebForm_gw2.aspx"
 headers = {
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
@@ -46,6 +48,16 @@ def extract_search_findings(page_text: str) -> list[str]:
     return [i.string for i in soup.find_all("a", class_="internal block")]
 
 
+@dataclass(frozen=True)
+class IFAClientConfig:
+    url: str = IFA_URL
+
+    @classmethod
+    def from_env(cls, env: dict[str, str] | None = None) -> "IFAClientConfig":
+        env = env or os.environ
+        return cls(url=env.get("IFA_URL") or cls.url)
+
+
 class IFAClient:
     def __init__(self, url: str):
         self._url = url
@@ -56,6 +68,7 @@ class IFAClient:
         return extract_search_findings(response.text)
 
 
-def search(term: str) -> set[str]:
-    client = IFAClient(url)
-    return client.search_ingredient(term)
+def create_ifa_client() -> IFAClient:
+    config = IFAClientConfig.from_env()
+    client = IFAClient(url=config.url)
+    return client
