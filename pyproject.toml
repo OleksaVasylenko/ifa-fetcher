@@ -8,6 +8,7 @@ addopts = "--cov=src"
 
 [tool.coverage.report]
 show_missing = true
+fail_under = 85
 
 [tool.isort]
 profile = "black"
