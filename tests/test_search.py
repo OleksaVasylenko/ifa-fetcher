@@ -15,6 +15,7 @@ from ifa_fetcher.search import search_ingredient
         ("hello", ["hello world"], ("", ["hello world"])),
         ("Hello", ["hello"], ("hello", [])),
         ("hello", ["Hello"], ("Hello", [])),
+        ("a", ["a", "ab"], ("a", ["ab"])),
     ],
 )
 def test_search_ingredient(
