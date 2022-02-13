@@ -1,3 +1,0 @@
-SKU,exact,partial
-12345,['Paraquat'],"{'Aqua': ['Paraquat', 'Paraquat dichloride (ISO)', 'Paraquat dimethylsulfate'], 'Paraquat': ['Paraquat dichloride (ISO)', 'Paraquat dimethylsulfate']}"
-666,[],"{'Aqua': ['Paraquat', 'Paraquat dichloride (ISO)', 'Paraquat dimethylsulfate'], 'Polyethylene': ['Polyethylene dust', 'Polyethylene glycol', 'Polyethylene terephthalate']}"

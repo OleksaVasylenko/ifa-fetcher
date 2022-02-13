@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from concurrent.futures import ThreadPoolExecutor, wait
 
 from .entities import SearchReport, SearchReportUnit
 from .fetcher import IFAClient
@@ -8,6 +9,7 @@ from .search import search_ingredient
 class IFAReportService:
     def __init__(self, ifa_client: IFAClient):
         self._client = ifa_client
+        self._executor = ThreadPoolExecutor()
 
     def build_report_unit(self, sku: str, ingredients: list[str]) -> SearchReportUnit:
         result = SearchReportUnit(SKU=sku)
@@ -21,7 +23,15 @@ class IFAReportService:
 
     def build_report(self, items_to_find: OrderedDict) -> SearchReport:
         result = SearchReport()
-        for sku, ingredients in items_to_find.items():
-            report_unit = self.build_report_unit(sku, ingredients)
-            result.units.append(report_unit)
+        with self._executor as executor:
+            future_to_sku = {}
+            for sku, ingredients in items_to_find.items():
+                future_to_sku[
+                    executor.submit(self.build_report_unit, sku, ingredients)
+                ] = sku
+            done, _ = wait(future_to_sku)
+            for fut in done:
+                report_unit = fut.result()
+                result.units.append(report_unit)
+
         return result
