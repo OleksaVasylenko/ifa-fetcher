@@ -1,3 +1,5 @@
+from concurrent.futures import ThreadPoolExecutor
+
 import pytest
 
 from ifa_fetcher.entities import SearchReport, SearchReportUnit
@@ -16,14 +18,18 @@ def ifa_report_service() -> IFAReportService:
 
 
 def test_build_report_unit_match(ifa_report_service: IFAReportService) -> None:
-    result = ifa_report_service.build_report_unit("hello", ["a", "c", "e"])
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        result = ifa_report_service.build_report_unit(
+            "hello", ["a", "c", "e"], executor
+        )
     assert result == SearchReportUnit(
         SKU="hello", exact_match=["a", "c"], partial_match={"a": ["ab"]}
     )
 
 
 def test_build_report_unit_nonmatch(ifa_report_service: IFAReportService) -> None:
-    result = ifa_report_service.build_report_unit("hello", ["e"])
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        result = ifa_report_service.build_report_unit("hello", ["e"], executor)
     assert result == SearchReportUnit(SKU="hello", exact_match=[], partial_match={})
 
 
