@@ -72,8 +72,9 @@ class IFASearchResult:
 
 
 class IFAClient:
-    def __init__(self, url: str):
+    def __init__(self, url: str, concurrent_requests: int):
         self._url = url
+        self._concurrent_requests = concurrent_requests
 
     def search_ingredient(self, ingredient: str) -> IFASearchResult:
         data = build_form_data_for_search(ingredient)
@@ -82,7 +83,7 @@ class IFAClient:
         return IFASearchResult(ingredient=ingredient, findings=findings)
 
     def search_ingredients(self, ingredients: list[str]) -> list[IFASearchResult]:
-        with ThreadPoolExecutor() as executor:
+        with ThreadPoolExecutor(max_workers=self._concurrent_requests) as executor:
             job = self.search_ingredient
             ingr_to_fut = {i: executor.submit(job, i) for i in ingredients}
             wait(ingr_to_fut.values())
@@ -96,5 +97,5 @@ class IFAClient:
 
 def create_ifa_client() -> IFAClient:
     config = IFAClientConfig.from_env()
-    client = IFAClient(url=config.url)
+    client = IFAClient(url=config.url, concurrent_requests=config.concurrent_requests)
     return client

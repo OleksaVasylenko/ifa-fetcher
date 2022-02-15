@@ -12,7 +12,7 @@ class IFAClientStub(IFAClient):
 
 @pytest.fixture
 def ifa_report_service() -> IFAReportService:
-    return IFAReportService(IFAClientStub(url="http://a.com"))
+    return IFAReportService(IFAClientStub(url="http://a.com", concurrent_requests=2))
 
 
 def test_build_report_unit_match(ifa_report_service: IFAReportService) -> None:

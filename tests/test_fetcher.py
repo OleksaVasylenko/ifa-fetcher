@@ -50,7 +50,7 @@ def test_extract_search_findings_empty_page() -> None:
 def test_ifa_client(ifa_server: IFAServer) -> None:
     # can not check form data of the request :(
     # https://github.com/pallets/flask/issues/3448
-    client = IFAClient(ifa_server.url)
+    client = IFAClient(ifa_server.url, concurrent_requests=1)
     client.search_ingredient("something")
     assert len(ifa_server.incoming_requests) == 1
     request, *_ = ifa_server.incoming_requests
