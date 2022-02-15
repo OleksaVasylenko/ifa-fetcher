@@ -60,24 +60,32 @@ class IFAClientConfig:
         return cls(url=env.get("IFA_URL") or cls.url)
 
 
+@dataclass(frozen=True)
+class IFASearchResult:
+    ingredient: str
+    findings: list[str]
+
+
 class IFAClient:
     def __init__(self, url: str):
         self._url = url
 
-    def search_ingredient(self, name: str) -> list[str]:
-        data = build_form_data_for_search(name)
+    def search_ingredient(self, ingredient: str) -> IFASearchResult:
+        data = build_form_data_for_search(ingredient)
         response = requests.post(self._url, headers=headers, data=data)
-        return extract_search_findings(response.text)
+        findings = extract_search_findings(response.text)
+        return IFASearchResult(ingredient=ingredient, findings=findings)
 
-    def search_ingredients(self, names: list[str]) -> OrderedDict[str, list[str]]:
+    def search_ingredients(self, ingredients: list[str]) -> list[IFASearchResult]:
         with ThreadPoolExecutor() as executor:
-            name_to_fut = {n: executor.submit(self.search_ingredient, n) for n in names}
-            wait(name_to_fut.values())
-            result = OrderedDict({})
-            for name in names:
-                fut = name_to_fut[name]
-                findings = fut.result()
-                result[name] = findings
+            job = self.search_ingredient
+            ingr_to_fut = {i: executor.submit(job, i) for i in ingredients}
+            wait(ingr_to_fut.values())
+            result = []
+            for ingredient in ingredients:
+                fut = ingr_to_fut[ingredient]
+                search_result = fut.result()
+                result.append(search_result)
             return result
 
 

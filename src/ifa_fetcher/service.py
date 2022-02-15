@@ -12,8 +12,10 @@ class IFAReportService:
 
     def build_report_unit(self, sku: str, ingredients: list[str]) -> SearchReportUnit:
         result = SearchReportUnit(SKU=sku)
-        ingredient_to_findings = self._client.search_ingredients(ingredients)
-        for ingr, findings in ingredient_to_findings.items():
+        search_results = self._client.search_ingredients(ingredients)
+        for search_result in search_results:
+            ingr = search_result.ingredient
+            findings = search_result.findings
             exact_match, partial_match = search_ingredient(ingr, findings)
             exact_match and result.exact_match.append(exact_match)
             if partial_match:

@@ -1,13 +1,13 @@
 import pytest
 
 from ifa_fetcher.entities import SearchReport, SearchReportUnit
-from ifa_fetcher.fetcher import IFAClient
+from ifa_fetcher.fetcher import IFAClient, IFASearchResult
 from ifa_fetcher.service import IFAReportService
 
 
 class IFAClientStub(IFAClient):
-    def search_ingredient(self, _: str) -> list[str]:
-        return ["a", "ab", "c", "d"]
+    def search_ingredient(self, ingredient: str) -> IFASearchResult:
+        return IFASearchResult(ingredient, ["a", "ab", "c", "d"])
 
 
 @pytest.fixture
