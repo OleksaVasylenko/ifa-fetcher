@@ -1,6 +1,8 @@
 import os
 import sys
 import urllib.parse
+from collections import OrderedDict
+from concurrent.futures import ThreadPoolExecutor, wait
 from dataclasses import dataclass
 from typing import Any
 
@@ -66,6 +68,17 @@ class IFAClient:
         data = build_form_data_for_search(name)
         response = requests.post(self._url, headers=headers, data=data)
         return extract_search_findings(response.text)
+
+    def search_ingredients(self, names: list[str]) -> OrderedDict[str, list[str]]:
+        with ThreadPoolExecutor() as executor:
+            name_to_fut = {n: executor.submit(self.search_ingredient, n) for n in names}
+            wait(name_to_fut.values())
+            result = OrderedDict({})
+            for name in names:
+                fut = name_to_fut[name]
+                findings = fut.result()
+                result[name] = findings
+            return result
 
 
 def create_ifa_client() -> IFAClient:
