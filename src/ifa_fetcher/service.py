@@ -24,14 +24,12 @@ class IFAReportService:
     def build_report(self, items_to_find: OrderedDict) -> SearchReport:
         result = SearchReport()
         with self._executor as executor:
-            future_to_sku = {}
+            sku_to_fut = OrderedDict({})
             for sku, ingredients in items_to_find.items():
-                future_to_sku[
-                    executor.submit(self.build_report_unit, sku, ingredients)
-                ] = sku
-            done, _ = wait(future_to_sku)
-            for fut in done:
+                fut = executor.submit(self.build_report_unit, sku, ingredients)
+                sku_to_fut[sku] = fut
+            wait(sku_to_fut.values())
+            for sku, fut in sku_to_fut.items():
                 report_unit = fut.result()
                 result.units.append(report_unit)
-
         return result
