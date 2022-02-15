@@ -6,7 +6,7 @@ from .csv_tools import read_csv, write_csv
 from .entities import SearchReport, SearchReportUnit
 from .fetcher import IFAClient, create_ifa_client
 from .search import search_ingredient
-from .service import IFAReportService
+from .service import create_ifa_report_service
 
 
 def main() -> None:
@@ -16,7 +16,7 @@ def main() -> None:
     out_file_path = sys.argv[2]
     items_to_find = read_csv(in_file_path)
     ifa_client = create_ifa_client()
-    ifa_search_service = IFAReportService(ifa_client)
+    ifa_search_service = create_ifa_report_service(ifa_client)
     start = time.time()
     report = ifa_search_service.build_report(items_to_find)
     print("report generation took seconds:", time.time() - start)
