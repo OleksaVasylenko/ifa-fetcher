@@ -60,11 +60,17 @@ def test_ifa_client(ifa_server: IFAServer) -> None:
 
 
 @pytest.mark.parametrize(
-    "url, env", [(IFA_URL, None), ("http://a.com", {"IFA_URL": "http://a.com"})]
+    "url, concurrent_requests, env",
+    [
+        (IFA_URL, 8, None),
+        ("http://a.com", 1, {"IFA_URL": "http://a.com", "IFA_CONCURRENT_REQUESTS": 1}),
+    ],
 )
-def test_ifa_client_config(url: str, env: dict[str, str] | None) -> None:
+def test_ifa_client_config(
+    url: str, concurrent_requests: int, env: dict[str, str] | None
+) -> None:
     result = IFAClientConfig.from_env(env)
-    assert result == IFAClientConfig(url=url)
+    assert result == IFAClientConfig(url=url, concurrent_requests=concurrent_requests)
 
 
 def test_create_ifa_client() -> None:

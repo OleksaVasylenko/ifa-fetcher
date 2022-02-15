@@ -53,11 +53,16 @@ def extract_search_findings(page_text: str) -> list[str]:
 @dataclass(frozen=True)
 class IFAClientConfig:
     url: str = IFA_URL
+    concurrent_requests: int = 8
 
     @classmethod
     def from_env(cls, env: dict[str, str] | None = None) -> "IFAClientConfig":
         env = env or os.environ
-        return cls(url=env.get("IFA_URL") or cls.url)
+        return cls(
+            url=env.get("IFA_URL") or cls.url,
+            concurrent_requests=env.get("IFA_CONCURRENT_REQUESTS")
+            or cls.concurrent_requests,
+        )
 
 
 @dataclass(frozen=True)
