@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Check ingredients{% endblock %}
+{% block content %}
+  <h2>Check ingredients</h2>
+  <form action="" method=post>
+    <p>SKU-ingredients table:
+      <input type=file name=sku_ingredients_table value="{{ sku_ingredients_table }}" >
+      <input type=submit value="Check">
+  </form>
+{% endblock %}
