@@ -10,4 +10,8 @@ def create_app() -> Flask:
     def hello():
         return "Hello, World!"
 
+    from .views import fetcher
+
+    app.register_blueprint(fetcher)
+
     return app
