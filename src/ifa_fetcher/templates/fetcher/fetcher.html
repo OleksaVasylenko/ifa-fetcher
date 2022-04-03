@@ -4,7 +4,7 @@
   <h2>Check ingredients</h2>
   <form action="" method=post>
     <p>SKU-ingredients table:
-      <input type=file name=sku_ingredients_table value="{{ sku_ingredients_table }}" >
+      <input type=file name=sku_ingredients_table enctype=multipart/form-data value="{{ sku_ingredients_table }}">
       <input type=submit value="Check">
   </form>
 {% endblock %}
